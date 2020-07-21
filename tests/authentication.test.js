@@ -2,14 +2,28 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const mongoose = require('mongoose')
-const { createUser, loginUser } = require('../utils/test_helpers')
-const User = require('../models/user')
+const {
+  createUser,
+  loginUser,
+  createInitialAdminUser,
+  deleteNonEssentialUsers,
+} = require('../utils/test_helpers')
+
 
 describe('Auth', () => {
 
+  let adminToken
+  beforeAll(async () => {
+    adminToken = await createInitialAdminUser()
+  })
+
+  afterAll(() => {
+    mongoose.connection.close()
+  })
+
   beforeEach(async () => {
-    await User.deleteMany({})
-    await createUser({ name: 'Test', ticket: 'ticket' })
+    await deleteNonEssentialUsers()
+    await createUser({ name: 'Test', ticket: 'ticket' }, adminToken)
   })
 
   describe('some routes do not require auth', () => {
@@ -43,6 +57,18 @@ describe('Auth', () => {
         .expect(401)
     })
 
+    test('GET admin', async () => {
+      await api
+        .get('/api/admin')
+        .expect(401)
+    })
+
+    test('GET admin/users', async () => {
+      await api
+        .get('/api/admin/users')
+        .expect(401)
+    })
+
     test('GET secrets with token', async () => {
       const loggedIn = await loginUser('ticket')
 
@@ -66,10 +92,6 @@ describe('Auth', () => {
       expect(body.secret.data).toBe('secret0')
     })
 
-  })
-
-  afterAll(() => {
-    mongoose.connection.close()
   })
 
 })

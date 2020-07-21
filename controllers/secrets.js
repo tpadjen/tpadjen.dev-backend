@@ -9,13 +9,12 @@ const secrets = ['All', 'of', 'my', 'secrets'].map((s, i) => {
   }
 })
 
-secretRouter.get('/', (req, res) => {
+secretRouter.get('/', (_req, res) => {
   res.json({ secrets })
 })
 
 secretRouter.get('/:id', (req, res) => {
   res.json({ secret: { id: req.params.id, data: `secret${req.params.id}`}})
 })
-
 
 module.exports = secretRouter

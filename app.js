@@ -8,7 +8,7 @@ const loginRouter = require('./controllers/login')
 const secretsRouter = require('./controllers/secrets')
 
 const db = require('./utils/db')
-const { verifyToken } = require('./auth/verifyToken')
+const { verifyToken, isAdmin } = require('./utils/auth')
 
 db.connect()
   .catch((error) => {
@@ -27,11 +27,13 @@ app.use(cors({
 app.use(express.json())
 
 app.use('/api/login', loginRouter)
-app.use('/api/users', usersRouter)
 
-// if (process.env.NODE_ENV === 'test') {
-app.use('/api/secrets', [verifyToken], secretsRouter)
-// }
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/secrets', [verifyToken], secretsRouter)
+}
+app.use('/api/admin', [verifyToken, isAdmin])
+app.use('/api/admin/users', usersRouter)
+
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

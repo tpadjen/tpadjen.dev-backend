@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
+const ROLES = ['user', 'admin']
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -10,6 +12,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+  },
+  roles: {
+    type: [{
+      type: String,
+      enum: ROLES
+    }],
+    'default': ['user'],
   }
 })
 

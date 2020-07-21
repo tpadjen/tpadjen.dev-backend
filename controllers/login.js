@@ -10,10 +10,16 @@ loginRouter.post('', async (req, res) => {
 
   if (!user) return res.status(403).send({ error: 'nope' })
 
-  const userInfo = { id: user._id, name: user.name }
+  const userInfo = {
+    id: user._id,
+    name: user.name,
+    roles: user.roles
+  }
+
   const token = jwt.sign(userInfo, config.JWT_SECRET, {
     expiresIn: 86400 // 24 hours
   })
+
   res.json({ ...userInfo, token })
 })
 

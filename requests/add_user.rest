@@ -1,0 +1,7 @@
+POST http://localhost:8081/api/users
+Content-Type: application/json
+
+{
+  "name": "New user",
+  "ticket": "golden"
+}

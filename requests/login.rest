@@ -1,0 +1,6 @@
+POST http://localhost:8081/api/login
+Content-Type: application/json
+
+{
+  "ticket": "golden"
+}

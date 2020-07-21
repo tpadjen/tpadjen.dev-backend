@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "name": "Amy",
+      "ticket": "ticket1",
+      "id": 1
+    },
+    {
+      "name": "Bob",
+      "ticket": "ticket2",
+      "id": 2
+    },
+    {
+      "name": "Carol",
+      "ticket": "ticket3",
+      "id": 3
+    }
+  ]
+}

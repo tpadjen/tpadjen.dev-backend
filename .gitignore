@@ -1,4 +1,12 @@
 node_modules/
 
-.env.development
-.env.production
+# environment
+.env
+.env.*
+
+# database
+data/db.*.json
+data/fixtures/*.production.json
+
+# OS
+.DS_Store

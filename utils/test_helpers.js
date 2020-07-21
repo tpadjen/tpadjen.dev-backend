@@ -18,8 +18,16 @@ const createUser = async (userInfo) => {
   return response.body
 }
 
+const loginUser = async (ticket) => {
+  const response = await api
+    .post('/api/login')
+    .send({ ticket })
+  return response.body
+}
+
 module.exports = {
   getUserById,
   getAllUsers,
-  createUser
+  createUser,
+  loginUser,
 }

@@ -5,8 +5,10 @@ const morgan = require('morgan')
 const middleware = require('./utils/middleware')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const secretsRouter = require('./controllers/secrets')
 
 const db = require('./utils/db')
+const { verifyToken } = require('./auth/verifyToken')
 
 db.connect()
   .catch((error) => {
@@ -27,9 +29,9 @@ app.use(express.json())
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 
-// app.get('/', (_req, res) => {
-//   res.json({ message: 'Welcome to the app' })
-// })
+// if (process.env.NODE_ENV === 'test') {
+app.use('/api/secrets', [verifyToken], secretsRouter)
+// }
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

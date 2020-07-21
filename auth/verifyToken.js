@@ -1,21 +1,21 @@
 // const { UserDatabase } = require('../data/database')
 const jwt = require('jsonwebtoken')
+const config = require('../utils/config')
+
+
+const extractToken = (authorization) => {
+  return authorization && authorization.toLowerCase().startsWith('bearer')
+    ? authorization.substring(7)
+    : undefined
+}
 
 exports.verifyToken = (req, res, next) => {
-  const token = req.headers['x-access-token']
-  console.log('Token', token)
+  const token = extractToken(req.get('Authorization'))
 
-  if (!token) {
-    return res.status(403)
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(401)
-
+  jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(401).send()
     req.userId = decoded.id
     next()
   })
+
 }
-
-
-

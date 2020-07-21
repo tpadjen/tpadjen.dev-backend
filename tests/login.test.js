@@ -38,11 +38,11 @@ describe('login', () => {
 
   describe('without a proper ticket', () => {
 
-    test('should error', async () => {
+    test('should be forbidden', async () => {
       const response = await api
         .post('/api/login')
         .send({ ticket: 'no ticket' })
-        .expect(401)
+        .expect(403)
         .expect('Content-Type', /application\/json/)
 
       expect(response.error).toBeTruthy()

@@ -8,7 +8,7 @@ const extractToken = (authorization) => {
     : undefined
 }
 
-const verifyToken = (req, res, next) => {
+const hasValidToken = (req, res, next) => {
   const token = extractToken(req.get('Authorization'))
 
   jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
@@ -26,7 +26,13 @@ const isAdmin = (req, res, next) => {
   next()
 }
 
+const isIDedUser = (req, res, next) => {
+  if (!req.userId || req.userId !== req.params.id) return res.status(403).send()
+  next()
+}
+
 module.exports = {
-  verifyToken,
+  hasValidToken,
   isAdmin,
+  isIDedUser,
 }

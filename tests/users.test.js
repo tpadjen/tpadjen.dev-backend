@@ -7,6 +7,7 @@ const {
   createUser,
   createInitialAdminUser,
   USERS_URL_BASE,
+  ID_USER_URL_BASE,
   loginUser,
   deleteNonEssentialUsers,
 } = require('../utils/test_helpers')
@@ -26,7 +27,41 @@ describe('users', () => {
     await deleteNonEssentialUsers()
   })
 
-  describe('auth', () => {
+  describe('IDed User', () => {
+
+    test('users can access their own info', async () => {
+      const currentUser = await createUser({ name: 'access', ticket: 'now' }, adminToken)
+      const { token: currentUserToken } = await loginUser('now')
+
+      const { body } = await api
+        .get(`${ID_USER_URL_BASE}/${currentUser.id}`)
+        .set('Authorization', `Bearer ${currentUserToken}`)
+        .expect(200)
+
+      expect(body.id).toBe(currentUser.id)
+      expect(body.name).toBe(currentUser.name)
+      expect(body.roles).toEqual(currentUser.roles)
+      expect(body.token).toBe(currentUser.token)
+    })
+
+    test("users cannot access someone else's info", async () => {
+      const otherUser = await createUser({ name: 'other', ticket: 'else' }, adminToken)
+      await createUser({ name: 'access', ticket: 'now' }, adminToken)
+      const { token: currentUserToken } = await loginUser('now')
+
+      const { body } = await api
+        .get(`${ID_USER_URL_BASE}/${otherUser.id}`)
+        .set('Authorization', `Bearer ${currentUserToken}`)
+        .expect(403)
+
+      expect(body.id).toBeUndefined()
+      expect(body.name).toBeUndefined()
+      expect(body.roles).toBeUndefined()
+      expect(body.token).toBeUndefined()
+    })
+  })
+
+  describe('Admin access', () => {
 
     test('accessible with authentication and admin', async () => {
       const { body } = await api
@@ -37,7 +72,7 @@ describe('users', () => {
       expect(body[0].name).toBe('TestAdmin')
     })
 
-    test('improper roles is forbidden', async () => {
+    test('improper roles are forbidden', async () => {
       await createUser({ name: 'another admin', ticket: 'another admin' }, adminToken)
       const { token: userToken } = await loginUser('another admin')
 

@@ -1,4 +1,5 @@
 const usersRouter = require('express').Router()
+const idUserRouter = require('express').Router()
 const User = require('../models/user')
 
 
@@ -22,4 +23,12 @@ usersRouter.get('/:id', async (req, res) => {
   res.json(user)
 })
 
-module.exports = usersRouter
+idUserRouter.get('', async (req, res) => {
+  const user = await User.findById(req.userId)
+  res.json(user)
+})
+
+module.exports = {
+  usersRouter,
+  idUserRouter,
+}

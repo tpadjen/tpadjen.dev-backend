@@ -3,12 +3,19 @@ const config = require('./utils/config')
 const cors = require('cors')
 const morgan = require('morgan')
 const middleware = require('./utils/middleware')
-const usersRouter = require('./controllers/users')
+const {
+  usersRouter,
+  idUserRouter,
+} = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const secretsRouter = require('./controllers/secrets')
 
 const db = require('./utils/db')
-const { verifyToken, isAdmin } = require('./utils/auth')
+const {
+  hasValidToken,
+  isAdmin,
+  isIDedUser,
+} = require('./utils/auth')
 
 db.connect()
   .catch((error) => {
@@ -29,9 +36,14 @@ app.use(express.json())
 app.use('/api/login', loginRouter)
 
 if (process.env.NODE_ENV === 'test') {
-  app.use('/api/secrets', [verifyToken], secretsRouter)
+  app.use('/api/secrets', [hasValidToken], secretsRouter)
 }
-app.use('/api/admin', [verifyToken, isAdmin])
+
+// users can grab their own info
+app.use('/api/users/:id', [hasValidToken, isIDedUser], idUserRouter)
+
+// admins can access everything
+app.use('/api/admin', [hasValidToken, isAdmin])
 app.use('/api/admin/users', usersRouter)
 
 

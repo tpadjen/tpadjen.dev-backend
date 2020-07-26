@@ -20,4 +20,7 @@ module.exports = {
   ORIGIN_URL: process.env.ORIGIN_URL,
   DB_FILE: `db.${environment}.json`,
   MONGODB_URI: process.env.MONGODB_URI,
+  GOOGLE_AUTH_ID: process.env.GOOGLE_AUTH_ID,
+  GOOGLE_AUTH_SECRET: process.env.GOOGLE_AUTH_SECRET,
+  GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
 }

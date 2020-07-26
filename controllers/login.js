@@ -8,7 +8,9 @@ loginRouter.post('', async (req, res) => {
   const { ticket } = req.body
   const user = await User.findOne({ ticket })
 
-  if (!user) return res.status(403).send({ error: 'nope' })
+
+  if (!user) return res.status(403).json({ message: 'nope' })
+  if (user.googleId) return res.status(403).json({ message: 'nope' })
 
   const userInfo = {
     id: user._id,

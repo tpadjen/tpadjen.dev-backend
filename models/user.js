@@ -19,7 +19,11 @@ const userSchema = new mongoose.Schema({
       enum: ROLES
     }],
     'default': ['user'],
-  }
+  },
+  googleId: {
+    type: String,
+    unique: true,
+  },
 })
 
 userSchema.set('toJSON', {

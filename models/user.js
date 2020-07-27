@@ -31,7 +31,8 @@ userSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-    delete returnedObject.ticket
+    if (returnedObject.roles.includes('admin'))
+      delete returnedObject.ticket
   }
 })
 

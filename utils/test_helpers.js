@@ -20,6 +20,7 @@ const createInitialAdminUser = async () => {
   const admin = new User({
     name: 'TestAdmin',
     ticket: 'admin',
+    googleId: 'admin-google-id',
     roles: ['admin']
   })
   await admin.save()

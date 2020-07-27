@@ -52,7 +52,7 @@ describe('users', () => {
       const { body } = await api
         .get(`${ID_USER_URL_BASE}/${otherUser.id}`)
         .set('Authorization', `Bearer ${currentUserToken}`)
-        .expect(403)
+        .expect(401)
 
       expect(body.id).toBeUndefined()
       expect(body.name).toBeUndefined()
@@ -114,7 +114,7 @@ describe('users', () => {
           .expect('Content-Type', /application\/json/)
 
         expect(theUser.name).toEqual(userInfo.name)
-        expect(theUser.ticket).toBeUndefined()
+        expect(theUser.ticket).toBe(userInfo.ticket)
         expect(theUser.id).toBeTruthy()
 
         const createdUser = await User.findById(theUser.id)
@@ -222,7 +222,7 @@ describe('users', () => {
 
         test('can not be other roles', async () => {
           const roles = ['apple', 'superuser', 'sudo', 'president', 'boss']
-          await Promise.all(roles.map(async (role) =>  {
+          await Promise.all(roles.map(async (role) => {
             const response = await createUser({ name: 'name', ticket: 't', roles: [role] }, adminToken)
 
             expect(response.error.errors['roles.0'].properties.message).toMatch(`\`${role}\` is not a valid`)

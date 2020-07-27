@@ -10,7 +10,10 @@ loginRouter.post('', async (req, res) => {
 
 
   if (!user) return res.status(403).json({ message: 'nope' })
-  if (user.googleId) return res.status(403).json({ message: 'nope' })
+
+  // reject admin users logging in with just a ticket, except in testing
+  if (process.env.NODE_ENV !== 'test')
+    if (user.googleId) return res.status(403).json({ message: 'nope' })
 
   const userInfo = {
     id: user._id,

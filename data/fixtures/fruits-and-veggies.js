@@ -120,7 +120,7 @@ module.exports = [
   'kale',
   'kohlrabi',
   'lavender',
-  'leek ',
+  'leek',
   'legume',
   'lentils',
   'lettuce',

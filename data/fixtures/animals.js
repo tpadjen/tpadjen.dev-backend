@@ -172,7 +172,6 @@ module.exports = [
   'rook',
   'salamander',
   'salmon',
-  'sand dollar',
   'sandpiper',
   'sardine',
   'scorpion',

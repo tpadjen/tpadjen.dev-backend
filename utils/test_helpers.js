@@ -4,8 +4,9 @@ const api = supertest(app)
 const User = require('../models/user')
 
 
-const USERS_URL_BASE = '/api/admin/users'
 const ID_USER_URL_BASE = '/api/users'
+const USERS_URL_BASE = '/api/admin/users'
+const TICKETS_URL_BASE = '/api/admin/tickets'
 
 const createUser = async (userInfo, token) => {
   const response = await api
@@ -39,11 +40,17 @@ const loginUser = async (ticket) => {
   return response.body
 }
 
+const getWithToken = (url, token) => {
+  return api.get(url).set('Authorization', `Bearer ${token}`)
+}
+
 module.exports = {
-  USERS_URL_BASE,
   ID_USER_URL_BASE,
+  USERS_URL_BASE,
+  TICKETS_URL_BASE,
   createUser,
   loginUser,
   createInitialAdminUser,
   deleteNonEssentialUsers,
+  getWithToken,
 }

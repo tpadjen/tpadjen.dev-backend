@@ -1,0 +1,2 @@
+GET http://localhost:8081/api/admin/tickets?amount=5
+Content-Type: application/json

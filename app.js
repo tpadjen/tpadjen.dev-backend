@@ -10,8 +10,10 @@ const {
 const googleRouter = require('./controllers/google')
 const loginRouter = require('./controllers/login')
 const secretsRouter = require('./controllers/secrets')
+const ticketsRouter = require('./controllers/tickets')
 
-const db = require('./utils/db')
+
+const db = require('./services/db')
 const {
   hasValidToken,
   isAdmin,
@@ -47,6 +49,7 @@ app.use('/api/users/:id', [hasValidToken, isIDedUser], idUserRouter)
 // admins can access everything
 app.use('/api/admin', [hasValidToken, isAdmin])
 app.use('/api/admin/users', usersRouter)
+app.use('/api/admin/tickets', ticketsRouter)
 
 
 app.use(middleware.unknownEndpoint)

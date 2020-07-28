@@ -1,5 +1,5 @@
 const User = require('../models/user')
-const db = require('../utils/db')
+const db = require('../services/db')
 const mongoose = require('mongoose')
 
 const userData = require(`./fixtures/users.${process.env.NODE_ENV}.json`)
@@ -13,7 +13,7 @@ const seedDb = async () => {
     await User.deleteMany({})
   }
   console.log('Adding users')
-  await Promise.all(userData.users.map( async(user) => {
+  await Promise.all(userData.users.map(async (user) => {
     const newUser = await new User(user).save()
     console.log(`Created ${newUser.name}`)
   }))

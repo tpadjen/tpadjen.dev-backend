@@ -4,7 +4,7 @@ const User = require('../models/user')
 
 
 usersRouter.post('', async (req, res) => {
-  const { name, ticket, roles } = req.body
+  const { name, ticket, roles = ['user'] } = req.body
   try {
     const newUser = await new User({ name, ticket, roles }).save()
     res.json(newUser)

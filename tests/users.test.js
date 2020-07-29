@@ -10,6 +10,7 @@ const {
   ID_USER_URL_BASE,
   loginUser,
   deleteNonEssentialUsers,
+  putWithToken,
 } = require('../utils/test_helpers')
 
 describe('users', () => {
@@ -235,6 +236,55 @@ describe('users', () => {
 
     })
 
+    describe('editing', () => {
+
+      let original
+      beforeEach(async () => {
+        original = await createUser({ name: 'original-name', ticket: 'original-ticket' }, adminToken)
+      })
+
+      test('can change the name', async () => {
+        const { body } = await putWithToken(
+          `${USERS_URL_BASE}/${original.id}`,
+          { name: 'new-name' },
+          adminToken
+        )
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(body.name).toBe('new-name')
+        expect(body.ticket).toBe(original.ticket)
+      })
+
+      test('can change the ticket', async () => {
+        const { body } = await putWithToken(
+          `${USERS_URL_BASE}/${original.id}`,
+          { ticket: 'new-ticket' },
+          adminToken
+        )
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(body.name).toBe(original.name)
+        expect(body.ticket).toBe('new-ticket')
+      })
+
+      test('cannot change the roles', async () => {
+        const { body } = await putWithToken(
+          `${USERS_URL_BASE}/${original.id}`,
+          { roles: ['admin'] },
+          adminToken
+        )
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(body.name).toBe(original.name)
+        expect(body.ticket).toBe(original.ticket)
+        expect(body.roles.length).toBe(1)
+        expect(body.roles[0]).toBe('user')
+      })
+
+    })
   })
 
 })

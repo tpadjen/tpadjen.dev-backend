@@ -44,6 +44,13 @@ const getWithToken = (url, token) => {
   return api.get(url).set('Authorization', `Bearer ${token}`)
 }
 
+const putWithToken = (url, data, token) => {
+  return api
+    .put(url)
+    .send(data)
+    .set('Authorization', `Bearer ${token}`)
+}
+
 module.exports = {
   ID_USER_URL_BASE,
   USERS_URL_BASE,
@@ -53,4 +60,5 @@ module.exports = {
   createInitialAdminUser,
   deleteNonEssentialUsers,
   getWithToken,
+  putWithToken,
 }

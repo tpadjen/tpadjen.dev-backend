@@ -31,9 +31,9 @@ describe('tickets', () => {
       const { token: userToken } = await loginUser('test')
 
       const { body } = await getWithToken(TICKETS_URL_BASE, userToken)
-        .expect(401)
+        .expect(403)
 
-      expect(body).toBeUndefined()
+      expect(body).toEqual({})
     })
 
     test('should create a ticket', async () => {

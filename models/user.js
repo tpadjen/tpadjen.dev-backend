@@ -23,7 +23,10 @@ const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
     unique: true,
+    sparse: true,
   },
+}, {
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
 
 userSchema.set('toJSON', {

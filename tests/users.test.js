@@ -11,7 +11,9 @@ const {
   loginUser,
   deleteNonEssentialUsers,
   putWithToken,
+  getWithToken,
 } = require('../utils/test_helpers')
+const { admin } = require('googleapis/build/src/apis/admin')
 
 describe('users', () => {
 
@@ -53,7 +55,7 @@ describe('users', () => {
       const { body } = await api
         .get(`${ID_USER_URL_BASE}/${otherUser.id}`)
         .set('Authorization', `Bearer ${currentUserToken}`)
-        .expect(401)
+        .expect(403)
 
       expect(body.id).toBeUndefined()
       expect(body.name).toBeUndefined()
@@ -122,6 +124,8 @@ describe('users', () => {
 
         expect(createdUser.name).toBe(userInfo.name)
         expect(createdUser.id).toBe(theUser.id)
+        expect(createdUser.created_at).toBeTruthy()
+        expect(createdUser.updated_at).toBeTruthy()
 
         const users = await User.find({})
         const foundUser = users.find(user => user.id === theUser.id)
@@ -234,6 +238,46 @@ describe('users', () => {
 
       })
 
+    })
+
+    describe('get', () => {
+      let user
+      beforeEach(async () => {
+        user = await createUser({ name: 'username', ticket: 'userticket' }, adminToken)
+      })
+
+      test('can get a user', async () => {
+        const { body } = await getWithToken(
+          `${USERS_URL_BASE}/${user.id}`,
+          adminToken
+        )
+          .expect(200)
+
+        expect(body.name).toBe(user.name)
+        expect(body.ticket).toBe(user.ticket)
+        expect(body.roles).toBeTruthy()
+        expect(body.roles.length).toBe(1)
+        expect(body.roles[0]).toBe('user')
+        expect(body.created_at).toBeTruthy()
+        expect(body.updated_at).toBeTruthy()
+      })
+
+      test('can get all users', async () => {
+        await createUser({ name: 'username2', ticket: 'userticket2' }, adminToken)
+        await createUser({ name: 'username3', ticket: 'userticket3' }, adminToken)
+
+        const { body } = await getWithToken(
+          `${USERS_URL_BASE}`,
+          adminToken
+        )
+          .expect(200)
+
+        expect(body.length).toBe(4)
+        expect(body.map(user => user.name)).toContain('TestAdmin')
+        expect(body.map(user => user.name)).toContain('username')
+        expect(body.map(user => user.name)).toContain('username2')
+        expect(body.map(user => user.name)).toContain('username3')
+      })
     })
 
     describe('editing', () => {

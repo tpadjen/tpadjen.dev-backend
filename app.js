@@ -1,5 +1,4 @@
 const express = require('express')
-const config = require('./utils/config')
 const cors = require('cors')
 const morgan = require('morgan')
 const middleware = require('./utils/middleware')

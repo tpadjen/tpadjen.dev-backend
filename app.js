@@ -11,6 +11,7 @@ const googleRouter = require('./controllers/google')
 const loginRouter = require('./controllers/login')
 const secretsRouter = require('./controllers/secrets')
 const ticketsRouter = require('./controllers/tickets')
+const contactInfoRouter = require('./controllers/contactInfo')
 
 
 const db = require('./services/db')
@@ -43,6 +44,8 @@ if (process.env.NODE_ENV === 'test') {
 
 // users can grab their own info
 app.use('/api/users/:id', [hasValidToken, isIDedUser], idUserRouter)
+// and my contact info
+app.use('/api/contact-info', [hasValidToken], contactInfoRouter)
 
 // admins can access everything
 app.use('/api/admin', [hasValidToken, isAdmin])

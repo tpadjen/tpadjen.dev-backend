@@ -7,6 +7,7 @@ const User = require('../models/user')
 const ID_USER_URL_BASE = '/api/users'
 const USERS_URL_BASE = '/api/admin/users'
 const TICKETS_URL_BASE = '/api/admin/tickets'
+const CONTACT_INFO_URL_BASE = '/api/contact-info'
 
 const createUser = async (userInfo, token) => {
   const response = await api
@@ -55,6 +56,7 @@ module.exports = {
   ID_USER_URL_BASE,
   USERS_URL_BASE,
   TICKETS_URL_BASE,
+  CONTACT_INFO_URL_BASE,
   createUser,
   loginUser,
   createInitialAdminUser,

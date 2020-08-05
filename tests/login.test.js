@@ -26,7 +26,8 @@ describe('login', () => {
     await deleteNonEssentialUsers()
     legitUser = await createUser({
       name: 'Test',
-      ticket: 'ticket'
+      ticket: 'ticket',
+      jobTitle: 'job title',
     }, adminToken)
   })
 
@@ -43,6 +44,7 @@ describe('login', () => {
       const user = response.body
       expect(user.id).toBe(legitUser.id)
       expect(user.name).toBe(legitUser.name)
+      expect(user.jobTitle).toBe(legitUser.jobTitle)
       expect(user.roles).toEqual(['user'])
 
       const tokenData = jwt.decode(user.token)

@@ -4,9 +4,9 @@ const User = require('../models/user')
 
 
 usersRouter.post('', async (req, res) => {
-  const { name, ticket, roles = ['user'] } = req.body
+  const { name, ticket, roles = ['user'], jobTitle } = req.body
   try {
-    const newUser = await new User({ name, ticket, roles }).save()
+    const newUser = await new User({ name, ticket, roles, jobTitle }).save()
     res.json(newUser)
   } catch (error) {
     return res.status(401).send({ error: error })
@@ -14,13 +14,14 @@ usersRouter.post('', async (req, res) => {
 })
 
 usersRouter.put('/:id', async (req, res) => {
-  const { name, ticket } = req.body
+  const { name, ticket, jobTitle } = req.body
   const originalUser = await User.findById(req.params.id)
   if (!originalUser) return res.status(403).send()
 
   try {
     originalUser.name = name || originalUser.name
     originalUser.ticket = ticket || originalUser.ticket
+    originalUser.jobTitle = jobTitle || originalUser.jobTitle
 
     await originalUser.save()
     return res.status(200).send(originalUser)

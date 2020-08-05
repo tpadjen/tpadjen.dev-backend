@@ -106,7 +106,8 @@ describe('users', () => {
       test('can be created', async () => {
         const userInfo = {
           name: 'Charlie',
-          ticket: 'golden'
+          ticket: 'golden',
+          jobTitle: 'software developer'
         }
 
         const { body: theUser } = await api
@@ -124,6 +125,7 @@ describe('users', () => {
 
         expect(createdUser.name).toBe(userInfo.name)
         expect(createdUser.id).toBe(theUser.id)
+        expect(createdUser.jobTitle).toBe(theUser.jobTitle)
         expect(createdUser.created_at).toBeTruthy()
         expect(createdUser.updated_at).toBeTruthy()
 
@@ -243,7 +245,11 @@ describe('users', () => {
     describe('get', () => {
       let user
       beforeEach(async () => {
-        user = await createUser({ name: 'username', ticket: 'userticket' }, adminToken)
+        user = await createUser({
+          name: 'username',
+          ticket: 'userticket',
+          jobTitle: 'a',
+        }, adminToken)
       })
 
       test('can get a user', async () => {
@@ -255,6 +261,7 @@ describe('users', () => {
 
         expect(body.name).toBe(user.name)
         expect(body.ticket).toBe(user.ticket)
+        expect(body.jobTitle).toBe(user.jobTitle)
         expect(body.roles).toBeTruthy()
         expect(body.roles.length).toBe(1)
         expect(body.roles[0]).toBe('user')
@@ -311,6 +318,19 @@ describe('users', () => {
 
         expect(body.name).toBe(original.name)
         expect(body.ticket).toBe('new-ticket')
+      })
+
+      test('can change the job title', async () => {
+        const { body } = await putWithToken(
+          `${USERS_URL_BASE}/${original.id}`,
+          { jobTitle: 'new-job' },
+          adminToken
+        )
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(body.jobTitle).toBe('new-job')
+        expect(body.ticket).toBe(original.ticket)
       })
 
       test('cannot change the roles', async () => {

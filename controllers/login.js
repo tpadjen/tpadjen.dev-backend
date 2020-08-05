@@ -18,7 +18,8 @@ loginRouter.post('', async (req, res) => {
   const userInfo = {
     id: user._id,
     name: user.name,
-    roles: user.roles
+    roles: user.roles,
+    jobTitle: user.jobTitle,
   }
 
   const token = jwt.sign(userInfo, config.JWT_SECRET, {

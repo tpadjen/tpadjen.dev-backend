@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true,
   },
+  jobTitle: {
+    type: String,
+    unique: false,
+    required: false,
+  }
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
